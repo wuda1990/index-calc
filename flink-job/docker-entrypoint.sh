@@ -15,4 +15,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-java -classpath  /app/data-generator.jar com.onepiece.rm.trade.generator.DataGenerator kafka:9092 transactions
+flink run -d /app/IndexCalculateJob.jar -c com.onepiece.rm.trade.index.calc.IndexCalcApplication --bootstrap.servers kafka:9092 --checkpointing --event-time

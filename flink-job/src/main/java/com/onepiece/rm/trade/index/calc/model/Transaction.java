@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package com.one.piece.rm.trade.index.calc.model;
+package com.onepiece.rm.trade.index.calc.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -16,9 +16,8 @@
  * limitations under the License.
  */
 
-package com.one.piece.rm.trade.index.calc.model;
+package com.onepiece.rm.trade.index.calc.model;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.common.serialization.Serializer;
 
@@ -28,7 +27,7 @@ import java.util.Map;
 /**
  * Serializes a {@link Transaction} into a CSV record.
  */
-@Slf4j
+//@Slf4j
 public class TransactionSerializer implements Serializer<Transaction> {
 
     private static final DateTimeFormatter formatter =
@@ -48,10 +47,10 @@ public class TransactionSerializer implements Serializer<Transaction> {
     public byte[] serialize(String s, Transaction transaction) {
         try {
             final String value = objectMapper.writeValueAsString(transaction);
-            log.info(value);
+//            log.info(value);
             return value.getBytes();
         } catch (Exception e) {
-            log.error("Error serializing transaction", e);
+//            log.error("Error serializing transaction", e);
             throw new RuntimeException(e);
         }
     }

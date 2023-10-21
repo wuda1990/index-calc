@@ -5,9 +5,10 @@
 FROM maven:3.8-eclipse-temurin-17 AS builder
 
 # Get data-generator and compile it
-COPY ./* /opt/index-calc/data-generator/
-WORKDIR /opt/index-calc/data-generator
-RUN echo $(ls -alt)
+COPY ./src /opt/data-generator/src/
+COPY ./pom.xml /opt/data-generator/
+WORKDIR /opt/data-generator
+RUN echo $(ls)
 RUN mvn clean verify
 
 
@@ -18,5 +19,8 @@ RUN mvn clean verify
 FROM openjdk:11-jre-slim
 
 WORKDIR /app
-# Copy Click Count Job
-COPY --from=builder /opt/index-calc/data-generator/target/index-calc-*.jar /app/data-generator.jar
+# Copy Data Generator Job
+COPY --from=builder /opt/data-generator/target/data-generator-*.jar /app/data-generator.jar
+#Run Data Generator Job
+COPY docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]

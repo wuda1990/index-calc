@@ -1,4 +1,4 @@
-package com.one.piece.rm.trade.index.calc.model;
+package com.onepiece.rm.trade.index.calc.model;
 
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;

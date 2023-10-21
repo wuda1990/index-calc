@@ -23,10 +23,11 @@
 FROM maven:3.8-eclipse-temurin-17 AS builder
 
 # Get Click Count job and compile it
-COPY ./* /opt/index-calc/
-WORKDIR /opt/index-calc
-RUN echo $(ls -alt)
+COPY ./src /opt/flink-job/src/
+COPY ./pom.xml /opt/flink-job/
+WORKDIR /opt/flink-job
 RUN mvn clean verify
+RUN echo $(ls -lR .)
 
 
 ###############################################################################
@@ -38,4 +39,6 @@ FROM apache/flink:1.16.0-scala_2.12-java11
 WORKDIR /opt/flink/bin
 
 # Copy Click Count Job
-COPY --from=builder /opt/index-calc/target/index-calc-*.jar /opt/IndexCalculateJob.jar
+COPY --from=builder /opt/flink-job/target/flink-job-*.jar /app/IndexCalculateJob.jar
+COPY docker-entrypoint.sh /
+ENTRYPOINT ["/docker-entrypoint.sh"]

@@ -2,14 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>index-calc</artifactId>
-        <groupId>com.onepiece</groupId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>flink-job</artifactId>
     <packaging>jar</packaging>
+    <groupId>com.onepiece</groupId>
+    <version>1.0-SNAPSHOT</version>
+
+    <repositories>
+        <repository>
+            <id>nexus-aliyun</id>
+            <name>aliyun maven</name>
+            <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
+        </repository>
+    </repositories>
+
 
     <properties>
         <target.java.version>11</target.java.version>
@@ -88,11 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>${target.java.version}</source>
-                    <target>${target.java.version}</target>
-                </configuration>
+                <version>3.10.1</version>
             </plugin>
 
             <!-- We use the maven-shade plugin to create a fat jar that contains all necessary dependencies. -->
@@ -100,7 +102,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.0.0</version>
                 <executions>
                     <!-- Run shade goal on package phase -->
                     <execution>
@@ -109,13 +111,12 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
                             <artifactSet>
                                 <excludes>
-                                    <exclude>org.apache.flink:flink-shaded-force-shading</exclude>
+                                    <exclude>org.apache.flink:force-shading</exclude>
                                     <exclude>com.google.code.findbugs:jsr305</exclude>
-                                    <exclude>org.slf4j:*</exclude>
-                                    <exclude>org.apache.logging.log4j:*</exclude>
+                                    <!--                                    <exclude>org.slf4j:*</exclude>-->
+                                    <!--                                    <exclude>log4j:*</exclude>-->
                                 </excludes>
                             </artifactSet>
                             <filters>
@@ -131,9 +132,9 @@
                                 </filter>
                             </filters>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.one.piece.rm.trade.index.calc.job.PanIndexJob</mainClass>
+                                <transformer
+                                    implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.onepiece.rm.trade.index.calc.IndexCalcApplication</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
@@ -211,6 +212,12 @@
                 <dependency>
                     <groupId>org.apache.flink</groupId>
                     <artifactId>flink-streaming-java</artifactId>
+                    <version>${flink.version}</version>
+                    <scope>compile</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.flink</groupId>
+                    <artifactId>flink-clients</artifactId>
                     <version>${flink.version}</version>
                     <scope>compile</scope>
                 </dependency>

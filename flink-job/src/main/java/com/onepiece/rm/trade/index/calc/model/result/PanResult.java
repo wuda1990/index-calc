@@ -1,4 +1,4 @@
-package com.one.piece.rm.trade.index.calc.model.result;
+package com.onepiece.rm.trade.index.calc.model.result;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

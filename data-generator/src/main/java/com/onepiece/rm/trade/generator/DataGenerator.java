@@ -36,7 +36,7 @@ public class DataGenerator {
                 "Usage: <KAFKA_BOOTSTRAP_SERVERS> <TOPIC>");
         }
         String KAFKA =
-            Optional.ofNullable(args[0]).orElse("my-cluster-kafka-bootstrap:9092");
+            Optional.ofNullable(args[0]).orElse("kafka:9092");
         String TOPIC =
             Optional.ofNullable(args[1]).orElse("transactions");
 
