@@ -1,10 +1,11 @@
 package com.onepiece.rm.trade.index.calc.model.result;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.serialization.SerializationSchema;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper;
 
-//@Slf4j
+@Slf4j
 public class PanResultSerializer implements SerializationSchema<PanResult> {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();

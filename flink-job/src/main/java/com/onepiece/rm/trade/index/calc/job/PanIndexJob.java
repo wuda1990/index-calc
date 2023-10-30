@@ -10,20 +10,23 @@ import org.apache.flink.api.common.JobExecutionResult;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.connector.kafka.sink.KafkaSink;
 import org.apache.flink.connector.kafka.source.KafkaSource;
+import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.datastream.WindowedStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.windowing.assigners.TumblingEventTimeWindows;
 import org.apache.flink.streaming.api.windowing.time.Time;
 import org.apache.flink.streaming.api.windowing.windows.TimeWindow;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
 
-//@Slf4j
 public class PanIndexJob {
+
+    private static final Logger logger = LoggerFactory.getLogger(PanIndexJob.class);
 
     public JobExecutionResult execute(KafkaSource<Transaction> kafkaSource, KafkaSink<PanResult> sink)
         throws Exception {
-
         // set up streaming execution environment
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         // define warkmark strategy
@@ -37,12 +40,15 @@ public class PanIndexJob {
                 "transactions")
             .keyBy(Transaction::getPan)
             .window(TumblingEventTimeWindows.of(Time.days(3))); // should we use sliding time window?
-        window.reduce(new TxnAmountReduceFunction(), new TxnAmountProcessFunction()).sinkTo(sink);
+        final SingleOutputStreamOperator<PanResult> reduce = window.reduce(new TxnAmountReduceFunction(),
+            new TxnAmountProcessFunction());
+        reduce.print();
+        reduce.sinkTo(sink);
         //calculate the txn count for each pan in last 24 hours
         window.aggregate(new TxnCountAggregator(), new TxnCountCollector()).sinkTo(sink);
 
         // run the pipeline and return the result
-//        log.info("execute job");
+        logger.info("execute job");
         return env.execute("Pan Index Job");
     }
 }
